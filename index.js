@@ -3,7 +3,6 @@ const { Client } = require("@notionhq/client")
 var cors = require('cors');
 const { log } = require('console');
 require('dotenv').config()
-
 const app = express();
 app.use(cors())
 
@@ -27,18 +26,22 @@ app.get('/', async (req, res) => {
 
 
 // notion sdk
-app.get('/NotionAPIGet', async (req, res) => {
+app.get('/NotionWiki', async (req, res) => {
     try {
         const response = await notion.databases.query({
             database_id: process.env.NOTION_DATABASE_ID,
+            sorts: [
+                {
+                    property: "Siderbar_Number",
+                    direction: "ascending"
+                }
+            ],
 
         });
 
-        const vie = `Vie - Eng`
-
         res.send(response);
-        const { results } = response;
-        console.log(results);
+        // const { results } = response;
+        // console.log(results);
 
     } catch (error) {
         console.log(error);
