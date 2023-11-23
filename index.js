@@ -64,8 +64,8 @@ app.get('/siderbar', async (req, res) => {
     // return array of result
     const { results } = response;
     let secondArray = []
+    let subArray = []
 
-    let dbID = ''
     results.forEach(databaseID => {
         if (databaseID.parent.type == "database_id") {
             let pageTitle = databaseID.properties.Page.title[0].plain_text
@@ -87,10 +87,32 @@ app.get('/siderbar', async (req, res) => {
                         name: pageTitle,
                         secondSubName: []
                     })
+                } else {
+                    subArray.push(pageID)
                 }
             })
         }
     })
+
+    subArray?.forEach(element => {
+        if (element.parent.type == "page_id") {
+            let pageTitle = element.properties.Page.title[0].plain_text
+            secondArray.forEach(arrayID => {
+                if (arrayID.subName.length != 0) {
+                    arrayID.subName.forEach(el => {
+                        if (el.id == element.parent.page_id) {
+                            el.secondSubName.push({
+                                id: element.id,
+                                name: pageTitle,
+                                thirdSubName: []
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
+
 
     results.forEach(element => {
         if (element.parent.type == "page_id") {
